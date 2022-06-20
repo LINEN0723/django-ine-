@@ -10,7 +10,7 @@ class Stok(ABC):
         pass
 class IFoodie(Stok):
     def scrape(self):
-        url = ('https://invest.cnyes.com/twstock/TWS/'+self.area)   # 台積電 Yahoo 股市網址
+        url = ('https://invest.cnyes.com/twstock/TWS/'+self.area)  
         web = requests.get(url)                          # 取得網頁內容
         soup = BeautifulSoup(web.text, "html.parser")
         content =""    # 轉換內容

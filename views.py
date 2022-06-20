@@ -7,7 +7,10 @@ from django.conf import settings
 from linebot import LineBotApi, WebhookParser
 from linebot.exceptions import InvalidSignatureError, LineBotApiError
 from linebot.models import MessageEvent, TextSendMessage 
-from .stork import IFoodie
+from .stork  import bFoodie
+from .scraper import IFoodie
+
+
 line_bot_api = LineBotApi(settings.LINE_CHANNEL_ACCESS_TOKEN)
 parser = WebhookParser(settings.LINE_CHANNEL_SECRET)
  
@@ -28,14 +31,14 @@ def callback(request):
             return HttpResponseBadRequest()
  
         for event in events:
- 
             if isinstance(event, MessageEvent):  # 如果有訊息事件
  
-                food = IFoodie(event.message.text)  #使用者傳入的訊息文字
- 
+            
+                god = bFoodie(event.message.text)#使用者傳入的訊息文字
+                food = IFoodie(event.message.text)#使用者傳入的訊息文字
                 line_bot_api.reply_message( 
                     event.reply_token,
-                    TextSendMessage(text=food.scrape())
+                    TextSendMessage (text=food.scrape()or god.scrape() )
                 )
             
             

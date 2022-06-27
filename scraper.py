@@ -1,7 +1,6 @@
 from bs4 import BeautifulSoup
 from abc import ABC, abstractmethod
 import requests
-# 美食抽象類別
 class Food(ABC):
  
     def __init__(self, area):
@@ -11,14 +10,13 @@ class Food(ABC):
     def scrape(self):
         pass
  
-# 愛食記爬蟲
 class IFoodie(Food):
     def scrape(self):
         response = requests.get(
             "https://ifoodie.tw/explore/" + self.area +
             "/list?sortby=popular&opening=true")
         soup = BeautifulSoup(response.content , "html.parser")
-        # 爬取前五筆餐廳卡片資料
+
         cards = soup.find_all(
             'div', {'class': 'jsx-3292609844 restaurant-info'}, limit=3)
         content = ""

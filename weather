@@ -1,0 +1,33 @@
+from email import message
+import requests
+import json
+from abc import ABC, abstractmethod
+class wea(ABC):
+    def __init__(self, area):
+        self.area = area 
+    @abstractmethod
+    def scrape(self):
+        pass
+class cFoodie(wea):
+  def scrape(self):
+    url = "https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001"
+    params = {
+        "Authorization": "要自己去申請api",
+        "locationName": "新北市",
+    }
+
+    response = requests.get(url, params=params)
+    weatherr=''
+    if response.status_code == 200:
+      data = json.loads(response.text)
+      location = data["records"]["location"][0]["locationName"]
+      weather_elements = data["records"]["location"][0]["weatherElement"]
+      start_time = weather_elements[0]["time"][0]["startTime"]
+      end_time = weather_elements[0]["time"][0]["endTime"]
+      weather_state = weather_elements[0]["time"][0]["parameter"]["parameterName"]
+      rain_prob = weather_elements[1]["time"][0]["parameter"]["parameterName"]
+      min_tem = weather_elements[2]["time"][0]["parameter"]["parameterName"]
+      comfort = weather_elements[3]["time"][0]["parameter"]["parameterName"]
+      max_tem = weather_elements[4]["time"][0]["parameter"]["parameterName"]
+      weatherr += f"{location}:\n{start_time}\n{end_time}\n{weather_state}\n{comfort}\n雨量:{rain_prob}\n最高溫度:{max_tem}\n最低溫度:{min_tem} "
+      return weatherr

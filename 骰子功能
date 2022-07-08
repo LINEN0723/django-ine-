@@ -1,0 +1,14 @@
+import random
+from abc import ABC, abstractmethod
+class dice(ABC):
+    def __init__(self, area):
+        self.area = area 
+ 
+    @abstractmethod
+    def scrape(self):
+        pass
+class aFoodie(dice): 
+ def scrape(self):
+   no=random.randint(1,6)   # 1~6
+   return no
+   

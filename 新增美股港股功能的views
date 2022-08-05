@@ -1,3 +1,5 @@
+from ast import In
+from tokenize import Number
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
 from django.views.decorators.csrf import csrf_exempt
@@ -39,7 +41,8 @@ def callback(request):
                     weather_1= weather1(event.message.text)#使用者傳入的訊息文字
                     dice_1 = dice1(event.message.text)
                     stork_2 = stork2(event.message.text)
-                    if "天氣"   in mtext:
+                    
+                    if "天氣" in mtext:
                         line_bot_api.reply_message( 
                         event.reply_token,
                         TextSendMessage (text=weather_1.scrape()))
@@ -47,19 +50,18 @@ def callback(request):
                         line_bot_api.reply_message( 
                         event.reply_token,
                         TextSendMessage (text=dice_1.scrape()))
-                    elif "US"  in mtext:
+                    elif "市" in mtext:
                         line_bot_api.reply_message( 
                         event.reply_token,
-                        TextSendMessage (text= stork_2.scrape()))
-                    elif "市" or"縣" in mtext:
+                        TextSendMessage (text=food_1.scrape()))
+                    elif "US" in mtext:
                         line_bot_api.reply_message( 
                         event.reply_token,
-                        TextSendMessage (text= food_1.scrape()))    
+                        TextSendMessage (text=stork_2.scrape()))
                     line_bot_api.reply_message( 
-                        event.reply_token,
-                        TextSendMessage (text =stork_1.scrape() 
-                                        ) ) 
+                    event.reply_token,
+                    TextSendMessage (text = stork_1.scrape() )
+                        )                                         
         return HttpResponse()
     else:
         return HttpResponseBadRequest()
-        

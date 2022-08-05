@@ -1,0 +1,24 @@
+from turtle import title
+import requests
+from bs4 import BeautifulSoup
+from abc import ABC, abstractmethod
+class tok(ABC):
+    def __init__(self, area):
+        self.area = area
+    @abstractmethod
+    def scrape(self):
+        pass
+class stork2(tok):
+    def scrape(self):
+        headers={
+                'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36'
+        }
+        url =requests.get("https://www.futunn.com/hk/stock/"+self.area,headers=headers)
+        soup= BeautifulSoup(url.text, "html.parser")
+        data=""
+        title=self.area
+        h1=soup.find(class_='stock-price ellipsis').getText()
+        h2=soup.find(class_="stock-change ellipsis").getText()
+        h3=soup.find[1](class_='stock-change ellipsis').getText()
+        data +=f"{title}\n{h1}\n{h2}\n{h3}"
+        return data

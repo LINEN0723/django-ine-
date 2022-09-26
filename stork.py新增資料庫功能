@@ -1,0 +1,40 @@
+import requests
+from bs4 import BeautifulSoup
+from abc import ABC, abstractmethod
+import pymysql
+
+class Stok(ABC):
+    def __init__(self, area):
+        self.area = area
+    @abstractmethod
+    def scrape(self):
+        pass
+class stork1(Stok):
+    def scrape(self):
+        url = ('https://invest.cnyes.com/twstock/TWS/'+self.area) 
+        web = requests.get(url)                          # 取得網頁內容
+        soup = BeautifulSoup(web.text, "html.parser")
+        content =""   
+        title=soup.find(class_='jsx-2715122309 header_second') .getText()         
+        a=soup.find( class_='jsx-2214436525 info-lp').getText()    
+        b=soup.find( class_='jsx-2214436525 change-net').getText()
+        c=soup.find( class_='jsx-2214436525 change-percent').getText()
+        content +=(f'{title}\n股價:\n{a}\n{b}\n{c} ')
+        
+        db = pymysql.connect(host='127.0.0.1', user='root', passwd='123456', db='stock', port=3306, charset='utf8')
+    # 獲取資料庫控制代碼
+        cursor = db.cursor()
+    # 插入資料的sql語句
+        sql = 'insert into stocks (stock_name,stock_pricecol,stock_gain,stock_gain_ratio) values (%s, %s, %s, %s)'
+        try:
+            values = (title,a,b,c)
+            cursor.execute(sql, values)
+        # 提交事務
+            db.commit()
+        except BaseException as e:  # 如果發生錯誤則回滾
+            db.rollback()
+            print(e)
+        finally:  # 關閉遊標連線
+            cursor.close()
+            db.close()
+        return content
